@@ -22,7 +22,31 @@
             -webkit-tap-highlight-color: transparent;
             margin: 0;
             padding: 0;
+            transition: background 0.5s ease;
         }
+
+        /* --- TAMBAHAN BARU: Background Login & Batik Ondel-Ondel --- */
+        .login-bg {
+            /* Background lintasan olahraga dengan overlay hijau tosca */
+            background-image: linear-gradient(rgba(20, 184, 166, 0.85), rgba(15, 118, 110, 0.95)), url('https://img.magnific.com/vektor-premium/set-jakarta-betawi-doodle-illustration-kerak-telor-tanjidor-ondelondel-monumen-nasional-transjakarta-budaya-tradisional-untuk-stiker-elemen-grafis_1091605-174.jpg?semt=ais_hybrid&w=740&q=80=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .bg-batik-ondel {
+            /* Pola batik dipadukan dengan warna teal agar tetap elegan dan teks terbaca */
+            background-color: #0f766e;
+            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWVXRj8Xh4EADTlHJunMtqKB86aVv0nQERkIUfSo-QtA&s=10');
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: multiply; /* Kunci agar gambar menyatu dengan background-color */
+        }
+        
+        .text-shadow {
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+        }
+        /* ----------------------------------------------------------- */
         
         .bounce-hover:hover {
             transform: translateY(-5px);
@@ -83,23 +107,24 @@
 </head>
 <body class="text-gray-800 flex flex-col min-h-screen relative">
 
-    <header class="bg-teal-500 text-white p-4 shadow-md sticky top-0 z-40 flex items-center justify-between">
+    <!-- Header diperbarui dengan class bg-batik-ondel dan garis bawah kuning -->
+    <header class="bg-batik-ondel text-white p-4 shadow-lg sticky top-0 z-40 flex items-center justify-between border-b-4 border-yellow-400">
         <div class="flex items-center gap-3">
-            <button id="backBtn" onclick="goBack()" class="hidden text-xl p-2 bg-teal-600 rounded-full w-10 h-10 flex items-center justify-center hover:bg-teal-700 active:scale-95 transition">
+            <button id="backBtn" onclick="goBack()" class="hidden text-xl p-2 bg-black bg-opacity-20 backdrop-blur-sm rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-40 active:scale-95 transition">
                 <i class="fas fa-arrow-left"></i>
             </button>
             <div>
-                <h1 class="text-2xl font-bold tracking-wide">Pustaka PJOK</h1>
-                <p class="text-xs text-teal-100 font-medium">Buku Saku & Persiapan Ujian</p>
+                <h1 class="text-2xl font-bold tracking-wide text-shadow">Pustaka PJOK</h1>
+                <p class="text-xs text-yellow-100 font-medium text-shadow">Buku Saku & Persiapan Ujian</p>
             </div>
         </div>
-        <div class="text-right bg-white p-1.5 rounded-full shadow-sm text-teal-600">
+        <div class="text-right bg-white p-1.5 rounded-full shadow-md text-teal-600 border-2 border-yellow-400">
             <i class="fas fa-book-reader text-xl ml-1 mr-1"></i>
         </div>
     </header>
 
     <!-- Kontainer Utama -->
-    <main id="appContainer" class="p-4 max-w-lg mx-auto w-full pb-20 flex-grow">
+    <main id="appContainer" class="p-4 max-w-lg mx-auto w-full pb-20 flex-grow relative z-10">
         <!-- Konten akan di-render di sini oleh JavaScript -->
     </main>
 
@@ -126,109 +151,140 @@
         // ==========================================
         // PENGATURAN GOOGLE SHEETS
         // ==========================================
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx5JlC4MisUIqKTMsiYU-WiWJMvpeApY8dFdVt0NDhKbJTFe2OEhgvcwnk1nppLwK6B/exec"; 
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwQXIUaS8EfPgja4m2KnZmtKOrbsJVjohpfBawHsIHkfxsNwP1Slg2W-aKKVlo8nssW/exec"; 
         
-        let materiDatabase = []; // Akan diisi otomatis dari Google Sheets
+        let materiDatabase = []; 
 
-        // DATA CADANGAN (Fallback Database)
         const fallbackDatabase = [
             { 
                 id: 1, 
+                kelasTarget: "1, 2", 
                 kategori: 'Bola Besar', 
-                topik: 'Sepak Bola: Dribbling & Passing', 
+                topik: 'Sepak Bola: Pengenalan Dasar', 
                 tanggal: 'Minggu ke-1',
                 icon: 'fa-futbol',
                 color: 'blue',
-                bukuKonten: "Materi Hari Ini: Sepak Bola\n\n1. Dribbling (Menggiring)\nMenggiring bola menggunakan kaki bagian dalam, luar, atau punggung kaki. Tujuannya untuk membawa bola mendekati gawang lawan.\n\n2. Passing (Mengumpan)\nMemberikan bola kepada teman satu tim. Gunakan kaki bagian dalam untuk operan jarak pendek yang akurat.\n\nKunci sukses: Perhatikan posisi teman dan kekuatan tendangan!",
-                refleksiPrompt: "Bagian kaki mana yang menurutmu paling mudah digunakan untuk mengumpan bola? Mengapa?",
-                kisiKisi: [
-                    "Sikap badan saat melakukan passing.",
-                    "Perbedaan menggunakan kaki bagian dalam dan punggung kaki.",
-                    "Ujian Praktik: Menggiring bola zig-zag melewati 5 kerucut."
-                ],
-                soal: [
-                    { q: "Untuk operan jarak pendek yang akurat, sebaiknya menggunakan kaki bagian...", options: ["Punggung kaki", "Kaki bagian luar", "Kaki bagian dalam"], ans: 2 },
-                    { q: "Apa tujuan utama dari menggiring bola (dribbling)?", options: ["Membuang waktu", "Mendekati sasaran/gawang", "Mencetak gol langsung"], ans: 1 }
-                ]
+                bukuKonten: "Materi Hari Ini: Sepak Bola\n\n1. Mengenal Bola\nBola sepak berbentuk bulat dan biasanya dimainkan dengan kaki.",
+                refleksiPrompt: "Apakah kamu senang bermain bola hari ini?",
+                materiDocLink: "https://docs.google.com/document/d/CONTOH_LINK_MATERI_MINGGU_1/edit",
+                kisiDocLink: "https://docs.google.com/document/d/CONTOH_LINK_KISI_MINGGU_1/edit",
+                soalDocLink: "https://docs.google.com/document/d/CONTOH_LINK_SOAL_MINGGU_1/edit",
+                videoLink: "https://www.youtube.com/watch?v=ScMzIvxBSi4",
+                kisiKisi: ["Bentuk bola sepak.", "Cara menendang yang aman."],
+                soal: [{ q: "Bola sepak dimainkan menggunakan...", options: ["Tangan", "Kaki", "Kepala"], ans: 1 }]
             },
             { 
                 id: 2, 
-                kategori: 'Kesehatan & P3K', 
-                topik: 'Penanganan Luka Lecet', 
+                kelasTarget: "Semua", 
+                kategori: 'Bola Besar', 
+                topik: 'Sepak Bola: Dribbling & Passing', 
                 tanggal: 'Minggu ke-2',
-                icon: 'fa-kit-medical',
-                color: 'red',
-                bukuKonten: "P3K: Pertolongan Pertama Pada Kecelakaan\n\nLuka Lecet sering terjadi saat kita terjatuh di lapangan. Berikut cara menanganinya:\n\n1. Cuci Tangan: Pastikan tangan penolong bersih.\n2. Bersihkan Luka: Cuci luka dengan air mengalir atau cairan antiseptik untuk menghilangkan debu/pasir.\n3. Keringkan: Tepuk perlahan dengan kasa steril atau kain bersih.\n4. Tutup Luka: Gunakan plester jika luka rentan terkena kotoran lagi.\n\nIngat: Jangan meniup luka karena mulut kita mengandung banyak bakteri!",
-                refleksiPrompt: "Pernahkah kamu terjatuh dan luka lecet saat bermain? Apa yang kamu lakukan saat itu?",
-                kisiKisi: [
-                    "Langkah pertama menangani luka lecet.",
-                    "Alasan tidak boleh meniup luka.",
-                    "Ujian Tertulis: Menyusun urutan penanganan luka lecet."
-                ],
-                soal: [
-                    { q: "Hal pertama yang harus dilakukan saat melihat teman luka lecet adalah...", options: ["Meniup lukanya", "Memastikan tangan kita bersih", "Langsung membungkus luka"], ans: 1 },
-                    { q: "Mengapa kita tidak dianjurkan meniup luka?", options: ["Karena membuat perih", "Bakteri dari mulut bisa menempel", "Agar cepat kering"], ans: 1 }
-                ]
+                icon: 'fa-futbol',
+                color: 'blue',
+                bukuKonten: "Materi Hari Ini: Sepak Bola\n\n1. Dribbling (Menggiring)\nMenggiring bola menggunakan kaki.",
+                refleksiPrompt: "Bagian kaki mana yang paling mudah?",
+                materiDocLink: "https://docs.google.com/document/d/CONTOH_LINK_MATERI_MINGGU_2/edit",
+                kisiDocLink: "https://docs.google.com/document/d/CONTOH_LINK_KISI_MINGGU_2/edit",
+                soalDocLink: "https://docs.google.com/document/d/CONTOH_LINK_SOAL_MINGGU_2/edit",
+                videoLink: "https://www.youtube.com/watch?v=1234567890",
+                kisiKisi: ["Sikap badan saat melakukan passing."],
+                soal: [{ q: "Apa tujuan utama dari menggiring bola (dribbling)?", options: ["Membuang waktu", "Mendekati sasaran/gawang", "Mencetak gol langsung"], ans: 1 }]
             },
             { 
                 id: 3, 
-                kategori: 'Atletik', 
-                topik: 'Kombinasi Jalan, Lari & Lompat', 
+                kelasTarget: "Semua", 
+                kategori: 'Kesehatan & P3K', 
+                topik: 'Penanganan Luka Lecet', 
                 tanggal: 'Minggu ke-3',
-                icon: 'fa-person-running',
-                color: 'orange',
-                bukuKonten: "Atletik Dasar (Kombinasi Gerak)\n\nGerak dasar atletik meliputi jalan, lari, lompat, dan lempar. Hari ini kita fokus pada kombinasi:\n\n1. Jalan Cepat: Tumit kaki selalu menyentuh tanah terlebih dahulu.\n2. Lari Sprint: Badan condong ke depan, ayunkan tangan seirama dengan langkah kaki.\n3. Lompat Jauh Dasar: Gunakan satu kaki terkuat untuk menolak (melompat), dan mendarat dengan dua kaki.\n\nMenggabungkan gerak ini melatih koordinasi dan kekuatan otot kaki.",
-                refleksiPrompt: "Kaki mana (kanan/kiri) yang kamu rasa paling kuat saat melakukan tolakan lompatan?",
-                kisiKisi: [
-                    "Perbedaan gerak jalan dan lari.",
-                    "Cara mendarat yang aman saat melompat.",
-                    "Ujian Praktik: Lari estafet pendek lalu melompati rintangan."
-                ],
-                soal: [
-                    { q: "Saat mendarat pada lompat jauh, sikap yang benar adalah...", options: ["Mendarat dengan satu kaki", "Mendarat dengan dua kaki mengeper", "Mendarat dengan tumit lurus"], ans: 1 },
-                    { q: "Gerakan lengan saat berlari cepat berfungsi untuk...", options: ["Menjaga keseimbangan dan menambah kecepatan", "Membuat gaya", "Menahan angin"], ans: 0 }
-                ]
+                icon: 'fa-kit-medical',
+                color: 'red',
+                bukuKonten: "P3K: Pertolongan Pertama Pada Kecelakaan...",
+                refleksiPrompt: "Pernahkah kamu terjatuh?",
+                materiDocLink: "https://docs.google.com/document/d/CONTOH_LINK_MATERI_MINGGU_3/edit", 
+                kisiDocLink: "https://docs.google.com/document/d/CONTOH_LINK_KISI_MINGGU_3/edit",
+                soalDocLink: "https://docs.google.com/document/d/CONTOH_LINK_SOAL_MINGGU_3/edit",
+                videoLink: "https://www.youtube.com/watch?v=contoh3",
+                kisiKisi: ["Langkah pertama menangani luka lecet."],
+                soal: [{ q: "Hal pertama yang harus dilakukan saat melihat teman luka lecet adalah...", options: ["Meniup lukanya", "Memastikan tangan kita bersih", "Langsung membungkus luka"], ans: 1 }]
             },
             { 
                 id: 4, 
-                kategori: 'Moto Gp', 
-                topik: 'K', 
-                tanggal: 'Minggu ke-3',
+                kelasTarget: "Semua", 
+                kategori: 'Atletik', 
+                topik: 'Kombinasi Jalan, Lari & Lompat', 
+                tanggal: 'Minggu ke-4',
                 icon: 'fa-person-running',
                 color: 'orange',
-                bukuKonten: "Atletik Dasar (Kombinasi Gerak)\n\nGerak dasar atletik meliputi jalan, lari, lompat, dan lempar. Hari ini kita fokus pada kombinasi:\n\n1. Jalan Cepat: Tumit kaki selalu menyentuh tanah terlebih dahulu.\n2. Lari Sprint: Badan condong ke depan, ayunkan tangan seirama dengan langkah kaki.\n3. Lompat Jauh Dasar: Gunakan satu kaki terkuat untuk menolak (melompat), dan mendarat dengan dua kaki.\n\nMenggabungkan gerak ini melatih koordinasi dan kekuatan otot kaki.",
-                refleksiPrompt: "Kaki mana (kanan/kiri) yang kamu rasa paling kuat saat melakukan tolakan lompatan?",
-                kisiKisi: [
-                    "Perbedaan gerak jalan dan lari.",
-                    "Cara mendarat yang aman saat melompat.",
-                    "Ujian Praktik: Lari estafet pendek lalu melompati rintangan."
-                ],
-                soal: [
-                    { q: "Saat mendarat pada lompat jauh, sikap yang benar adalah...", options: ["Mendarat dengan satu kaki", "Mendarat dengan dua kaki mengeper", "Mendarat dengan tumit lurus"], ans: 1 },
-                    { q: "Gerakan lengan saat berlari cepat berfungsi untuk...", options: ["Menjaga keseimbangan dan menambah kecepatan", "Membuat gaya", "Menahan angin"], ans: 0 }
-                ]
+                bukuKonten: "Atletik Dasar (Kombinasi Gerak)...",
+                refleksiPrompt: "Kaki mana (kanan/kiri) yang kamu rasa paling kuat?",
+                materiDocLink: "https://docs.google.com/document/d/CONTOH_LINK_MATERI_MINGGU_4/edit",
+                kisiDocLink: "https://docs.google.com/document/d/CONTOH_LINK_KISI_MINGGU_4/edit",
+                soalDocLink: "https://docs.google.com/document/d/CONTOH_LINK_SOAL_MINGGU_4/edit",
+                videoLink: "https://www.youtube.com/watch?v=contoh4",
+                kisiKisi: ["Perbedaan gerak jalan dan lari."],
+                soal: [{ q: "Saat mendarat pada lompat jauh, sikap yang benar adalah...", options: ["Mendarat dengan satu kaki", "Mendarat dengan dua kaki mengeper", "Mendarat dengan tumit lurus"], ans: 1 }]
             }
         ];
 
-        // VARIABEL STATE
-        let currentState = 'login'; // login, catalog, detail, buku, refleksi, kisikisi, kuis
+        let currentState = 'login'; 
         let currentMateri = null;
         let searchQuery = '';
         let studentName = '';
         let studentClass = '';
+        let studentGradeLevel = ''; 
         let isDataSynced = false;
 
         const appContainer = document.getElementById('appContainer');
         const backBtn = document.getElementById('backBtn');
         const loadingOverlay = document.getElementById('loadingOverlay');
 
-        // FUNGSI LOADING
-        function showLoading() {
-            loadingOverlay.classList.remove('hidden');
+        function getEmbedInfo(url) {
+            if (!url) return null;
+            const ytRegExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const ytMatch = url.match(ytRegExp);
+            if (ytMatch && ytMatch[2].length === 11) {
+                return { type: 'youtube', url: `https://www.youtube.com/embed/${ytMatch[2]}` };
+            }
+            const driveRegExp = /drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/;
+            const driveMatch = url.match(driveRegExp);
+            if (driveMatch && driveMatch[1]) {
+                return { type: 'gdrive', url: `https://drive.google.com/file/d/${driveMatch[1]}/preview` };
+            }
+            return null;
         }
-        function hideLoading() {
-            loadingOverlay.classList.add('hidden');
+
+        function createDocButtons(link, labelBuka = "Buka Dokumen", labelDownload = "Download PDF") {
+            if (!link || link.trim() === "") return ""; 
+            
+            let cleanLink = link.trim();
+            if (!cleanLink.startsWith('http://') && !cleanLink.startsWith('https://')) {
+                cleanLink = 'https://' + cleanLink;
+            }
+
+            let pdfLink = cleanLink;
+            if (cleanLink.includes('docs.google.com/document/d/')) {
+                const docIdMatch = cleanLink.match(/\/document\/d\/([a-zA-Z0-9-_]+)/);
+                if (docIdMatch && docIdMatch[1]) {
+                    const docId = docIdMatch[1];
+                    cleanLink = `https://docs.google.com/document/d/${docId}/edit?usp=sharing`;
+                    pdfLink = `https://docs.google.com/document/d/${docId}/export?format=pdf`;
+                }
+            }
+
+            return `
+                <div class="flex gap-2 mb-6 w-full fade-in">
+                    <a href="${cleanLink}" target="_blank" rel="noopener noreferrer" class="flex-1 bg-white border-2 border-teal-500 text-teal-600 text-center py-2.5 rounded-xl font-bold shadow-sm hover:bg-teal-50 transition flex items-center justify-center gap-2 text-sm">
+                        <i class="fas fa-file-alt"></i> ${labelBuka}
+                    </a>
+                    <a href="${pdfLink}" target="_blank" rel="noopener noreferrer" class="flex-1 bg-teal-500 text-white text-center py-2.5 rounded-xl font-bold shadow-sm hover:bg-teal-600 transition flex items-center justify-center gap-2 text-sm">
+                        <i class="fas fa-download"></i> ${labelDownload}
+                    </a>
+                </div>
+            `;
         }
+
+        function showLoading() { loadingOverlay.classList.remove('hidden'); }
+        function hideLoading() { loadingOverlay.classList.add('hidden'); }
 
         function showModal(title, message, type = 'info') {
             const modal = document.getElementById('customModal');
@@ -286,25 +342,28 @@
             backBtn.classList.add('hidden');
             setHeaderTitle('Selamat Datang!', 'Aplikasi Belajar PJOK');
             
+            // Aktifkan Background Login
+            document.body.classList.add('login-bg');
+            
             appContainer.innerHTML = `
                 <div class="fade-in max-w-sm mx-auto mt-6">
-                    <div class="text-center mb-8">
-                        <div class="inline-block bg-teal-100 p-5 rounded-full text-teal-600 text-5xl mb-4 shadow-inner">
+                    <div class="text-center mb-8 backdrop-blur-sm bg-white/60 p-4 rounded-3xl shadow-sm border border-white/50">
+                        <div class="inline-block bg-teal-500 p-5 rounded-full text-white text-5xl mb-4 shadow-lg border-4 border-white">
                             <i class="fas fa-running"></i>
                         </div>
-                        <h2 class="text-2xl font-extrabold text-gray-800">Halo, Sobat Olahraga!</h2>
-                        <p class="text-gray-500 text-sm mt-1">Isi data dirimu dulu yuk sebelum belajar.</p>
+                        <h2 class="text-2xl font-extrabold text-teal-800 text-shadow-sm">Halo, Sobat Olahraga!</h2>
+                        <p class="text-teal-700 font-bold text-sm mt-1">Isi data dirimu dulu yuk sebelum belajar.</p>
                     </div>
                     
-                    <form onsubmit="handleLogin(event)" class="bg-white p-6 rounded-3xl shadow-sm border-t-4 border-teal-500">
+                    <form onsubmit="handleLogin(event)" class="bg-white/95 backdrop-blur-md p-6 rounded-3xl shadow-xl border-t-4 border-yellow-400">
                         <div class="mb-5">
                             <label class="block text-gray-700 font-bold mb-2 text-sm"><i class="fas fa-user text-teal-500 mr-1"></i> Nama Panggilan:</label>
-                            <input type="text" id="inputName" placeholder="Contoh: Budi" required class="w-full p-4 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:border-teal-500 focus:outline-none text-gray-700 font-medium transition">
+                            <input type="text" id="inputName" placeholder="Contoh: Budi" required class="w-full p-4 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:border-teal-500 focus:outline-none text-gray-700 font-medium transition shadow-inner">
                         </div>
                         
                         <div class="mb-8">
                             <label class="block text-gray-700 font-bold mb-2 text-sm"><i class="fas fa-chalkboard-user text-teal-500 mr-1"></i> Kelas:</label>
-                            <select id="inputClass" required class="w-full p-4 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:border-teal-500 focus:outline-none text-gray-700 font-medium transition appearance-none">
+                            <select id="inputClass" required class="w-full p-4 bg-gray-50 border-2 border-gray-200 rounded-2xl focus:border-teal-500 focus:outline-none text-gray-700 font-medium transition appearance-none shadow-inner">
                                 <option value="" disabled selected>-- Pilih Kelasmu --</option>
                                 <option value="1A">Kelas 1A</option>
                                 <option value="1B">Kelas 1B</option>
@@ -322,7 +381,7 @@
                             </select>
                         </div>
 
-                        <button type="submit" class="w-full bounce-hover bg-gradient-to-r from-teal-400 to-teal-600 text-white font-bold py-4 rounded-2xl shadow-md flex items-center justify-center gap-2 text-lg">
+                        <button type="submit" class="w-full bounce-hover bg-gradient-to-r from-teal-500 to-teal-600 text-white font-bold py-4 rounded-2xl shadow-lg flex items-center justify-center gap-2 text-lg border-b-4 border-teal-700 hover:brightness-110">
                             <i class="fas fa-rocket"></i> Mulai Belajar!
                         </button>
                     </form>
@@ -338,12 +397,11 @@
             if(name && cls) {
                 studentName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
                 studentClass = cls;
+                studentGradeLevel = cls.replace(/[^0-9]/g, ''); 
                 
                 showLoading();
 
                 try {
-                    // --- BAGIAN YANG DIPERBAIKI ---
-                    // Pastikan di sini mengecek string kosong, bukan URL Google Script Bapak
                     if (GOOGLE_SCRIPT_URL === "") {
                         throw new Error("URL Google Script belum diisi, menggunakan data cadangan.");
                     }
@@ -381,11 +439,25 @@
             currentMateri = null;
             backBtn.classList.add('hidden');
             setHeaderTitle('Pustaka PJOK', 'Database Materi Belajar');
+            
+            // Matikan Background Login agar lebih bersih saat baca materi
+            document.body.classList.remove('login-bg');
 
-            let filteredData = materiDatabase.filter(m => 
-                (m.topik && m.topik.toLowerCase().includes(searchQuery.toLowerCase())) || 
-                (m.kategori && m.kategori.toLowerCase().includes(searchQuery.toLowerCase()))
-            );
+            let filteredData = materiDatabase.filter(m => {
+                let matchSearch = (m.topik && m.topik.toLowerCase().includes(searchQuery.toLowerCase())) || 
+                                  (m.kategori && m.kategori.toLowerCase().includes(searchQuery.toLowerCase()));
+                
+                let target = (m.kelasTarget || "Semua").toString().toLowerCase();
+                let matchClass = false;
+                
+                if (target.includes("semua") || target.includes("all") || target === "") {
+                    matchClass = true; 
+                } else if (target.includes(studentGradeLevel)) {
+                    matchClass = true; 
+                }
+
+                return matchSearch && matchClass;
+            });
 
             let cardsHTML = filteredData.map(materi => `
                 <div onclick="renderDetailMenu('${materi.id}')" class="bg-white rounded-2xl p-4 shadow-sm border-l-4 border-${materi.color || 'blue'}-500 flex items-center gap-4 cursor-pointer bounce-hover mb-4">
@@ -408,7 +480,7 @@
                     <div class="text-center py-10 fade-in">
                         <div class="text-5xl text-gray-300 mb-4"><i class="fas fa-search-minus"></i></div>
                         <h3 class="text-xl font-bold text-gray-600 mb-2">Materi Tidak Ditemukan</h3>
-                        <p class="text-gray-500 text-sm">Coba cari dengan kata kunci lain.</p>
+                        <p class="text-gray-500 text-sm">Belum ada materi untuk kelas ${studentGradeLevel} atau coba kata kunci lain.</p>
                     </div>
                 `;
             }
@@ -436,7 +508,7 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="fas fa-search text-teal-400"></i>
                         </div>
-                        <input type="text" id="searchInput" placeholder="Cari materi, topik, atau kategori..." 
+                        <input type="text" id="searchInput" placeholder="Cari materi kelas ${studentGradeLevel}..." 
                                value="${searchQuery}"
                                onkeyup="handleSearch(event)"
                                class="w-full pl-10 pr-4 py-3 rounded-2xl border-2 border-teal-100 focus:border-teal-400 focus:outline-none shadow-inner bg-white text-gray-700">
@@ -444,7 +516,7 @@
                     
                     <div>
                         <h2 class="text-gray-500 font-bold mb-4 ml-1 flex items-center gap-2">
-                            <i class="fas fa-bookmark text-teal-500"></i> Daftar Materi
+                            <i class="fas fa-bookmark text-teal-500"></i> Daftar Materi Kelas ${studentGradeLevel}
                         </h2>
                         ${cardsHTML}
                     </div>
@@ -494,7 +566,6 @@
                     <h3 class="text-gray-500 font-bold mb-3 ml-1">Menu Belajar</h3>
                     
                     <div class="grid grid-cols-2 gap-4 mb-4">
-                        <!-- Buku Materi -->
                         <button onclick="renderBuku()" class="bounce-hover bg-white border-2 border-blue-400 p-5 rounded-2xl shadow-sm flex flex-col items-center gap-3 text-center">
                             <div class="bg-blue-100 text-blue-600 w-14 h-14 rounded-full flex items-center justify-center text-2xl">
                                 <i class="fas fa-book-open"></i>
@@ -505,7 +576,6 @@
                             </div>
                         </button>
 
-                        <!-- Kisi-Kisi -->
                         <button onclick="renderKisiKisi()" class="bounce-hover bg-white border-2 border-purple-400 p-5 rounded-2xl shadow-sm flex flex-col items-center gap-3 text-center">
                             <div class="bg-purple-100 text-purple-600 w-14 h-14 rounded-full flex items-center justify-center text-2xl">
                                 <i class="fas fa-list-check"></i>
@@ -516,7 +586,6 @@
                             </div>
                         </button>
                         
-                        <!-- Latihan Kuis -->
                         <button onclick="renderKuis()" class="bounce-hover bg-white border-2 border-orange-400 p-5 rounded-2xl shadow-sm flex flex-col items-center gap-3 text-center">
                             <div class="bg-orange-100 text-orange-600 w-14 h-14 rounded-full flex items-center justify-center text-2xl">
                                 <i class="fas fa-gamepad"></i>
@@ -527,7 +596,6 @@
                             </div>
                         </button>
 
-                        <!-- Jurnal/Refleksi -->
                         <button onclick="renderRefleksi()" class="bounce-hover bg-white border-2 border-green-400 p-5 rounded-2xl shadow-sm flex flex-col items-center gap-3 text-center relative overflow-hidden">
                             <div class="bg-green-100 text-green-600 w-14 h-14 rounded-full flex items-center justify-center text-2xl">
                                 <i class="fas fa-pen-nib"></i>
@@ -550,15 +618,39 @@
             const formatText = rawText.replace(/\n\n/g, '</p><p class="mb-3 text-gray-700">').replace(/\n/g, '<br>');
             const color = currentMateri.color || 'blue';
 
+            const docButtonsHTML = createDocButtons(currentMateri.materiDocLink, "Buka Materi (G-Docs)", "Download Materi");
+
+            let videoHTML = '';
+            if (currentMateri.videoLink && currentMateri.videoLink.trim() !== "") {
+                const embedInfo = getEmbedInfo(currentMateri.videoLink);
+                
+                if (embedInfo) {
+                    videoHTML = `
+                        <div class="relative w-full rounded-2xl overflow-hidden shadow-md mb-6 border-4 border-gray-100" style="padding-top: 56.25%;">
+                            <iframe class="absolute top-0 left-0 w-full h-full" src="${embedInfo.url}" title="Video Materi" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    `;
+                } else {
+                    videoHTML = `
+                        <a href="${currentMateri.videoLink}" target="_blank" class="w-full bg-red-50 text-red-600 rounded-2xl p-4 shadow-sm mb-6 flex flex-col items-center justify-center border-2 border-red-200 hover:bg-red-100 transition bounce-hover">
+                            <i class="fas fa-external-link-alt text-4xl mb-2"></i>
+                            <span class="font-bold text-sm">Buka Link Pembelajaran</span>
+                        </a>
+                    `;
+                }
+            } else {
+                videoHTML = `
+                    <div class="relative w-full h-32 bg-gray-100 rounded-2xl overflow-hidden shadow-inner mb-6 flex items-center justify-center flex-col text-gray-400 border-2 border-dashed border-gray-300">
+                        <i class="fas fa-video-slash text-4xl mb-2 opacity-50"></i>
+                        <p class="font-medium text-xs">Belum ada video pendukung untuk materi ini</p>
+                    </div>
+                `;
+            }
+
             appContainer.innerHTML = `
                 <div class="fade-in">
-                    <!-- Simulasi Video/Gambar Cover -->
-                    <div class="relative w-full h-48 bg-gray-900 rounded-2xl overflow-hidden shadow-md mb-6 flex items-center justify-center flex-col text-white cursor-pointer group border-4 border-gray-100">
-                        <i class="fab fa-youtube text-6xl text-red-600 group-hover:scale-110 transition duration-300"></i>
-                        <p class="mt-3 font-medium text-sm group-hover:text-red-300 bg-black/50 px-4 py-1 rounded-full">Putar Video Panduan</p>
-                    </div>
-
-                    <!-- Tampilan Buku -->
+                    ${docButtonsHTML}
+                    ${videoHTML}
                     <div class="book-container w-full mb-8">
                         <div class="book-page w-full text-base border border-gray-300">
                             <div class="text-center mb-6 border-b-2 border-gray-200 pb-2">
@@ -595,8 +687,11 @@
                 kisiHTML = `<p class="text-center text-gray-500 italic p-4">Belum ada kisi-kisi untuk materi ini.</p>`;
             }
 
+            const docButtonsHTML = createDocButtons(currentMateri.kisiDocLink, "Buka File Kisi-Kisi", "Download Kisi-Kisi");
+
             appContainer.innerHTML = `
                 <div class="fade-in">
+                    ${docButtonsHTML}
                     <div class="text-center mb-8 mt-4">
                         <div class="inline-block bg-purple-100 p-5 rounded-full text-purple-600 text-4xl mb-3 shadow-inner">
                             <i class="fas fa-bullseye"></i>
@@ -604,7 +699,6 @@
                         <h2 class="text-2xl font-extrabold text-gray-800">Fokus Belajar!</h2>
                         <p class="text-gray-500 text-sm mt-1">Pelajari poin-poin di bawah ini untuk persiapan ujian Praktik maupun Tertulis.</p>
                     </div>
-
                     <ul class="space-y-1">
                         ${kisiHTML}
                     </ul>
@@ -621,7 +715,6 @@
             appContainer.innerHTML = `
                 <div class="fade-in">
                     <div class="bg-yellow-50 rounded-2xl p-6 shadow-md border border-yellow-200 relative overflow-hidden mt-2">
-                        <!-- Pin aesthetic -->
                         <div class="absolute top-2 left-1/2 transform -translate-x-1/2 text-red-500 text-2xl">
                             <i class="fas fa-thumbtack"></i>
                         </div>
@@ -666,14 +759,16 @@
             currentState = 'kuis';
             setHeaderTitle('Latihan Kuis', currentMateri.topik || 'Kuis');
 
+            const docButtonsHTML = createDocButtons(currentMateri.soalDocLink, "Buka File Soal", "Download Soal");
             let soalData = currentMateri.soal || [];
             
             if(soalData.length === 0) {
                 appContainer.innerHTML = `
                     <div class="fade-in text-center mt-10">
-                        <i class="fas fa-ghost text-5xl text-gray-300 mb-4"></i>
-                        <h2 class="text-xl font-bold text-gray-600">Belum Ada Kuis</h2>
-                        <p class="text-gray-500 mt-2">Materi ini belum memiliki soal latihan kuis.</p>
+                        ${docButtonsHTML}
+                        <i class="fas fa-ghost text-5xl text-gray-300 mb-4 mt-6"></i>
+                        <h2 class="text-xl font-bold text-gray-600">Belum Ada Kuis Interaktif</h2>
+                        <p class="text-gray-500 mt-2">Namun kamu bisa mengecek link dokumen di atas jika Pak Guru menyediakannya.</p>
                     </div>
                 `;
                 return;
@@ -681,7 +776,7 @@
 
             let soalHTML = soalData.map((s, index) => {
                 let optionsHTML = s.options.map((opt, optIndex) => `
-                    <button onclick="checkAnswer(${index}, ${optIndex})" id="btn-${index}-${optIndex}" class="w-full text-left p-4 border-2 border-gray-200 rounded-xl hover:bg-gray-50 focus:outline-none transition mb-3 font-medium text-gray-700 bg-white">
+                    <button onclick="checkAnswer(${index}, ${optIndex})" id="btn-${index}-${optIndex}" class="w-full text-left p-4 border-2 border-gray-200 rounded-xl hover:bg-gray-50 focus:outline-none transition mb-3 font-medium text-gray-700 bg-white shadow-sm">
                         <span class="inline-block w-6 font-bold text-gray-400">${String.fromCharCode(65 + optIndex)}.</span> ${opt}
                     </button>
                 `).join('');
@@ -689,7 +784,7 @@
                 return `
                     <div class="bg-gray-50 p-5 rounded-2xl shadow-sm border border-gray-200 mb-6" id="soal-card-${index}">
                         <div class="flex items-center gap-2 mb-3">
-                            <span class="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-md">Soal ${index + 1}</span>
+                            <span class="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-md shadow-sm">Soal ${index + 1}</span>
                         </div>
                         <h3 class="font-bold text-gray-800 mb-4 text-lg leading-snug">${s.q}</h3>
                         <div class="space-y-2">
@@ -702,24 +797,23 @@
 
             appContainer.innerHTML = `
                 <div class="fade-in">
-                    <div class="flex justify-between items-end mb-6 border-b-2 border-gray-100 pb-4">
+                    ${docButtonsHTML}
+                    <div class="flex justify-between items-end mb-6 border-b-2 border-gray-100 pb-4 mt-4">
                         <div>
                             <h2 class="text-2xl font-extrabold text-gray-800">Uji Otak! 🧠</h2>
                             <p class="text-gray-500 text-sm mt-1">Cek seberapa paham kamu.</p>
                         </div>
-                        <div class="bg-orange-100 text-orange-600 px-3 py-2 rounded-xl font-bold border border-orange-200 flex flex-col items-center">
+                        <div class="bg-orange-100 text-orange-600 px-3 py-2 rounded-xl font-bold border border-orange-200 flex flex-col items-center shadow-inner">
                             <span class="text-[10px] uppercase tracking-wider text-orange-400">Skor</span>
                             <span id="skorDisplay" class="text-xl leading-none">0</span>
                         </div>
                     </div>
-                    
                     <div id="quiz-container">
                         ${soalHTML}
                     </div>
                 </div>
             `;
             
-            // Reset skor temporer saat buka kuis
             appContainer.setAttribute('data-score', 0);
             appContainer.setAttribute('data-answered', 0);
         }
@@ -729,16 +823,12 @@
             const isCorrect = (selectedOptionIndex === soalData.ans);
             const totalSoal = currentMateri.soal.length;
             
-            // Nonaktifkan semua tombol di soal ini
             const card = document.getElementById(`soal-card-${soalIndex}`);
             const buttons = card.querySelectorAll('button');
             buttons.forEach(btn => btn.disabled = true);
 
-            // Styling tombol yang dipilih
             const selectedBtn = document.getElementById(`btn-${soalIndex}-${selectedOptionIndex}`);
             const correctBtn = document.getElementById(`btn-${soalIndex}-${soalData.ans}`);
-            
-            // Munculkan pesan
             const feedback = document.getElementById(`feedback-${soalIndex}`);
             feedback.classList.remove('hidden');
 
@@ -757,7 +847,6 @@
                 selectedBtn.classList.replace('border-gray-200', 'border-red-500');
                 selectedBtn.classList.add('bg-red-50', 'text-red-700');
                 
-                // Tunjukkan yang benar
                 correctBtn.classList.replace('border-gray-200', 'border-green-500');
                 correctBtn.classList.add('bg-green-50', 'border-2', 'shadow-sm');
                 
@@ -765,11 +854,9 @@
                 feedback.innerHTML = '<i class="fas fa-times-circle text-lg"></i> Ups! Yang benar adalah ' + String.fromCharCode(65 + soalData.ans) + '.';
             }
 
-            // Update skor UI
             appContainer.setAttribute('data-score', currentScore);
             document.getElementById('skorDisplay').textContent = Math.round(currentScore);
 
-            // Cek apakah semua sudah dijawab
             let answered = parseInt(appContainer.getAttribute('data-answered')) + 1;
             appContainer.setAttribute('data-answered', answered);
 
